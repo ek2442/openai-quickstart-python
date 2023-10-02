@@ -1,21 +1,186 @@
 <!DOCTYPE html>
-<head>
-  <title>OpenAI Quickstart</title>
-  <link
-    rel="shortcut icon"
-    href="{{ url_for('static', filename='dog.png') }}"
-  />
-  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
-</head>
-
-<body>
-  <img src="{{ url_for('static', filename='dog.png') }}" class="icon" />
-  <h3>Name my pet</h3>
-  <form action="/" method="post">
-    <input type="text" name="animal" placeholder="Enter an animal" required />
-    <input type="submit" value="Generate names" />
-  </form>
-  {% if result %}
-  <div class="result">{{ result }}</div>
-  {% endif %}
-</body>
+<html>
+  <head>
+    <title>My App</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+      }
+      .input-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100px;
+        background-color: #f2f2f2;
+      }
+      .input-container input {
+        width: 50%;
+        height: 50px;
+        font-size: 24px;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+      .button-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+      }
+      .button {
+        margin: 0 15px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .button:hover {
+        background-color: #0062cc;
+      }
+      .file-input {
+        display: none;
+      }
+      .file-label {
+        margin-left: 15px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .file-label:hover {
+        background-color: #0062cc;
+      }
+    </style>
+  </head>
+  <body>
+    <body>
+        <div class="input-container">
+          <input type="text" name="input_data" id="input_data" placeholder="Enter input data...">
+          <label for="file_input" class="file-label">Attach file</label>
+          <input type="file" name="file_input" id="file_input" class="file-input" accept=".pdf,.doc,.docx,.xlsx,.json,.llm">
+        </div>
+        <div class="button-container">
+          <button class="button" onclick="parseUnstructuredData()">Parse unstructured data</button>
+          <button class="button" onclick="explainCode()">Explain code</button>
+          <button class="button" onclick="getKeywords()">Keywords</button>
+          <button class="button" onclick="functionFromSpecification()">Function from specification</button>
+          <button class="button" onclick="prosAndCons()">Pros and cons discussed</button>
+          <button class="button" onclick="translation()">Translation</button>
+        </div>
+        {% if input_data %}
+          <p>Input: {{ input_data }}</p>
+        {% endif %}
+        {% if output_data %}
+          <p>Output: {{ output_data }}</p>
+        {% endif %}
+        <script>
+          function parseUnstructuredData() {
+            // Get the input data from the form
+            var input_data = document.getElementById('input_data').value;
+    
+            // Call the OpenAI API to parse unstructured data
+            var response = openai.Completion.create(
+              model="gpt-3.5-turbo",
+              prompt=input_data,
+              temperature=0,
+              max_tokens=256
+            );
+            var output_data = response.choices[0].text.strip();
+    
+            // Update the output field with the response
+            document.getElementById('output_data').value = output_data;
+          }
+          function explainCode() {
+            // Get the input data from the form
+            var input_data = document.getElementById('input_data').value;
+    
+            // Call the OpenAI API to explain code
+            var response = openai.Completion.create(
+              model="davinci-codex",
+              prompt="Explain the following code:\n\n" + input_data,
+              temperature=0,
+              max_tokens=256
+            );
+            var output_data = response.choices[0].text.strip();
+    
+            // Update the output field with the response
+            document.getElementById('output_data').value = output_data;
+          }
+          function getKeywords() {
+            // Get the input data from the form
+            var input_data = document.getElementById('input_data').value;
+    
+            // Call the OpenAI API to get keywords
+            var response = openai.Completion.create(
+              model="text-davinci-002",
+              prompt="Get the keywords for the following text:\n\n" + input_data,
+              temperature=0,
+              max_tokens=256
+            );
+            var output_data = response.choices[0].text.strip();
+    
+            // Update the output field with the response
+            document.getElementById('output_data').value = output_data;
+          }
+          function functionFromSpecification() {
+            // Get the input data from the form
+            var input_data = document.getElementById('input_data').value;
+    
+            // Call the OpenAI API to generate a function from a specification
+            var response = openai.Completion.create(
+              model="davinci-codex",
+              prompt="Generate a function that satisfies the following specification:\n\n" + input_data,
+              temperature=0,
+              max_tokens=256
+            );
+            var output_data = response.choices[0].text.strip();
+    
+            // Update the output field with the response
+            document.getElementById('output_data').value = output_data;
+          }
+          function prosAndCons() {
+            // Get the input data from the form
+            var input_data = document.getElementById('input_data').value;
+    
+            // Call the OpenAI API to get pros and cons
+            var response = openai.Completion.create(
+              model="text-davinci-002",
+              prompt="Get the pros and cons for the following text:\n\n" + input_data,
+              temperature=0,
+              max_tokens=256
+            );
+            var output_data = response.choices[0].text.strip();
+    
+            // Update the output field with the response
+            document.getElementById('output_data').value = output_data;
+          }
+          function translation() {
+            // Get the input data from the form
+            var input_data = document.getElementById('input_data').value;
+    
+            // Call the OpenAI API to translate text
+            var response = openai.Completion.create(
+              model="text-davinci-002",
+              prompt="Translate the following text to French:\n\n" + input_data,
+              temperature=0,
+              max_tokens=256
+            );
+            var output_data = response.choices[0].text.strip();
+    
+            // Update the output field with the response
+            document.getElementById('output_data').value = output_data;
+          }
+        </script>
+    </body>
+</html>
